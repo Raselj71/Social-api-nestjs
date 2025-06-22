@@ -5,16 +5,11 @@ import { DemoInterceptor } from 'src/common/interceptor/DemoInterceptor';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private AuthService: AuthService) {}
 
-
-    constructor (private AuthService:AuthService){}
-
-
-    @UseInterceptors(DemoInterceptor)
-    @Post('/signin')
-    async createAccount(@Body() Body:UserDto){
-
-         return this.AuthService.createAccount(Body)
-        
-    }
+  @UseInterceptors(DemoInterceptor)
+  @Post('/signin')
+  createAccount(@Body() Body: UserDto): Promise<any> {
+    return this.AuthService.createAccount(Body);
+  }
 }

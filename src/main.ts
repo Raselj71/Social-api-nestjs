@@ -4,7 +4,7 @@ import { AllExceptionHandler } from './common/ExceptionHandler/AllExceptionHandl
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new AllExceptionHandler())
+  app.useGlobalFilters(new AllExceptionHandler());
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
