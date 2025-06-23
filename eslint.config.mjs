@@ -32,7 +32,8 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-return':'warn',
       '@typescript-eslint/no-unsafe-assignment':'warn',
       '@typescript-eslint/no-unsafe-function-type':'off',
-      '@typescript-eslint/no-redundant-type-constituents':'off'
+      '@typescript-eslint/no-redundant-type-constituents':'off',
+      '@typescript-eslint/no-unsafe-member-access':'off'
     },
   },
 );
