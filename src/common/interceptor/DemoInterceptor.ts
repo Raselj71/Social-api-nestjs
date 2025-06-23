@@ -15,7 +15,7 @@ export class DemoInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     const excutionContext = context.switchToHttp();
     const req = excutionContext.getRequest<Request>();
-    req.body = null;
+
     console.log(req.body);
 
     const now = Date.now();

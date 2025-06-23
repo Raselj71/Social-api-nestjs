@@ -1,15 +1,12 @@
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserDto } from './dto/user.dto';
-import { DemoInterceptor } from 'src/common/interceptor/DemoInterceptor';
+import { CreateUserDto } from 'src/user/dto/createUserDto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private AuthService: AuthService) {}
-
-  @UseInterceptors(DemoInterceptor)
+  constructor(private auth: AuthService) {}
   @Post('/signin')
-  createAccount(@Body() Body: UserDto): Promise<any> {
-    return this.AuthService.createAccount(Body);
+  createAccount(@Body() Body: CreateUserDto) {
+    return this.auth.createAccount(Body);
   }
 }

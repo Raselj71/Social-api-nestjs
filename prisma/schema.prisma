@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String     @id @default(uuid())
+  name        String
+  email       String     @unique
+  password    String
+  avatarUrl   String?
+  bio         String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  posts       Post[]
+  comments    Comment[]
+  likes       Like[]
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  friends     Friendship[] @relation("UserFriends")
+  friendOf    Friendship[] @relation("FriendOf")
+
+  notifications Notification[]
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  content   String
+  imageUrl  String?
+  videoUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+
+  comments  Comment[]
+  likes     Like[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Friendship {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  status     FriendshipStatus
+
+  userId     String
+  user       User     @relation("UserFriends", fields: [userId], references: [id])
+
+  friendId   String
+  friend     User     @relation("FriendOf", fields: [friendId], references: [id])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  content     String
+  createdAt   DateTime @default(now())
+  seen        Boolean  @default(false)
+
+  senderId    String
+  receiverId  String
+
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  type       NotificationType
+  message    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+enum NotificationType {
+  FRIEND_REQUEST
+  MESSAGE
+  POST_LIKE
+  COMMENT
+}
