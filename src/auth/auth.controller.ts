@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/createUserDto';
 import { LoginUserDto } from 'src/user/dto/loginUserDto';
@@ -22,5 +22,16 @@ export class AuthController {
       response.cookie('token', res.payload.token);
     }
     return res;
+  }
+
+  @Get('/logout')
+   logOut(@Res() res: Response) {
+    res.clearCookie('token');
+    return res.status(200).json({
+      status: HttpStatus.OK,
+      payload: null,
+      success: true,
+      message: 'Successfully log out',
+    });
   }
 }
